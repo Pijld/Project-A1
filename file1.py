@@ -41,6 +41,10 @@ entry_naam.place(x=109,y=167,height=57,width=530)
 text_message = Text(window, bg="#dedbde", font=("Arial", 13))
 text_message.place(x=109, y=293, height=142, width=530)
 
+warning_message = Label(window, text="", font=("Arial", 10), bg="#FFC917", fg="red")
+warning_message.place(x=152, y=443, height=15, width=441)
+
+
 
 def anoniemfunction():
     if(x.get()==1):
@@ -62,21 +66,22 @@ def verstuur_message():
     real_time = current_time.strftime("%H:" + "%M")
     max_character = 140
     min_character = 1
-    while True:
-        name = entry_naam.get()
-        if name == "":
-            name = "Anoniem"
-        message = text_message.get(1.0,END).strip()
-        if min_character <= len(str(message)) <= max_character:
-            with open("output.txt", "a") as f:
-                f.write(f"name ; {str(name)} ; message ; {str(message)} ; datetime ; {real_date} ; {real_time}\n")
-                entry_naam.delete(0, END)
-                text_message.delete(1.0, END)
-            return message
-        elif min_character > len(str(message)):
-            print("please enter a message, containing at least 1 character.")
-        else:
-            print("please enter a maximum of 140 characters.")
+
+    name = entry_naam.get()
+    if name == "":
+        name = "Anoniem"
+
+    message = text_message.get(1.0,END).strip()
+
+    if min_character <= len(str(message)) <= max_character:
+        with open("output.txt", "a") as f:
+            f.write(f"name ; {str(name)} ; message ; {str(message)} ; datetime ; {real_date} ; {real_time}\n")
+            entry_naam.delete(0, END)
+            text_message.delete(1.0, END)
+            warning_message.config(text="")
+    else:
+        warning_message.config(text="Voer een bericht van minimaal 1 karakter en maximaal 140 karakters in")
+
 
 verstuur_button = Button(window,text="Verstuur", font=("Open Sans",13,"bold"),
                          bg="#0063D3", fg="black", activeforeground="black", activebackground="#0063D3",
@@ -85,11 +90,6 @@ verstuur_button.place(x=700,y=320, height=70, width=179.5)
 
 window.mainloop()
 
-# def input_name():
-#     name = input("enter your name: ")
-#     if name == "":
-#         name = "anonymous"
-#     return name
 
 
 
